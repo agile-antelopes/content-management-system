@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Country & Culture Info - CMS</title>
+    <!-- 复用原有CMS样式文件 -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 仅新增少量样式，适配模块分区/表单布局，不修改原有CSS */
+        .form-section {
+            margin: 2.5rem 0;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-section h3 {
+            color: #34495e;
+            margin: 1rem 0 0.8rem;
+            font-size: 1.1rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .required {
+            color: #e74c3c;
+        }
+        .input-note {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+            align-items: center;
+        }
+        .radio-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+        /* 适配小屏幕，模块栅格布局自适应 */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr !important;
+            }
+            .radio-group {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 复用原有CMS头部导航，保持页面一致性 -->
+    <header class="header">
+        <h1>Content Management System - Country & Culture Info</h1>
+        <nav>
+            <a href="index.html">Content List</a>
+            <a href="add-content.html">Add General Content</a>
+            <a href="add-country.html" class="active">Add Country Info</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <form id="add-country-form" class="content-form">
+            <!-- 基础信息：PDF模板核心 + 访谈问题A1 （必填核心项） -->
+            <div class="form-section">
+                <h2>Core Country Info <span class="required">*</span></h2>
+                <div class="form-group">
+                    <label for="country-name">Country Name <span class="required">*</span></label>
+                    <input type="text" id="country-name" name="country-name" required placeholder="Full country name (e.g. Japan, Brazil, United Kingdom)">
+                </div>
+                <div class="form-group">
+                    <label for="specific-region">Specific City/Region (Interview Q1) <span class="required">*</span></label>
+                    <input type="text" id="specific-region" name="specific-region" required placeholder="City/region of origin/mission (e.g. Tokyo, São Paulo, Scotland)">
+                </div>
+                <div class="form-group">
+                    <label for="country-brief-desc">Brief Country/Culture Description</label>
+                    <textarea id="country-brief-desc" name="country-brief-desc" rows="3" placeholder="A short paragraph about the overall country/culture identity"></textarea>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="languages">Official/Spoken Languages (Interview Q19)</label>
+                        <input type="text" id="languages" name="languages" placeholder="e.g. Spanish, Catalan; English, Maori">
+                    </div>
+                    <div class="form-group">
+                        <label for="population">Population</label>
+                        <input type="text" id="population" placeholder="e.g. 125 million (2024); 5.1 million (2024)">
+                    </div>
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <input type="text" id="currency" placeholder="e.g. Japanese Yen (JPY); Euro (EUR)">
+                    </div>
+                    <div class="form-group">
+                        <label for="gov-type">Government Type</label>
+                        <input type="text" id="gov-type" placeholder="e.g. Constitutional Monarchy; Federal Republic">
+                    </div>
+                </div>
+            </div>
+
+            <!-- A. Background & Location （访谈问题A1-A2 + PDF地理/历史） -->
+            <div class="form-section">
+                <h2>A. Background & Location</h2>
+                <div class="form-group">
+                    <label for="geo-location">Geographic Location (Relative to Other Countries)</label>
+                    <textarea id="geo-location" rows="3" placeholder="Paragraph: Where the country is located (e.g. East Asia, bordering China and South Korea)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="geo-features">Major Geographic Features</label>
+                    <textarea id="geo-features" rows="2" placeholder="List (line break for each) - e.g. Himalayan Mountains&#10;Amazon Rainforest&#10;Alps"></textarea>
+                    <p class="input-note">List format: Enter one feature per line (use enter for line break)</p>
+                </div>
+                <div class="form-group">
+                    <label for="climate">Climate & Weather Patterns</label>
+                    <textarea id="climate" rows="3" placeholder="Paragraph: Climate type, seasonal weather changes, key weather factors"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="major-historical-elements">Major Historical Elements (Interview Q2) <span class="required">*</span></label>
+                    <textarea id="major-historical-elements" rows="4" required placeholder="Paragraph: Key historical events, movements, or milestones that shape the culture/country"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="major-cities">Major Cities (Including Capital)</label>
+                    <textarea id="major-cities" rows="2" placeholder="List (line break for each) - e.g. London (capital)&#10;Birmingham&#10;Manchester"></textarea>
+                    <p class="input-note">List format: Enter one city per line (mark capital with (capital))</p>
+                </div>
+            </div>
+
+            <!-- B. Core Cultural Values & Beliefs （访谈问题B3-B5 + PDF价值观/误解） -->
+            <div class="form-section">
+                <h2>B. Core Cultural Values & Beliefs</h2>
+                <div class="form-group">
+                    <label for="top-cultural-values">Top Key Cultural Values (Interview Q3) <span class="required">*</span></label>
+                    <textarea id="top-cultural-values" rows="2" required placeholder="List (line break for each) - e.g. Family first&#10;Respect for elders&#10;Collectivism over individualism"></textarea>
+                    <p class="input-note">List format: Enter one value per line</p>
+                </div>
+                <div class="form-group">
+                    <label for="common-religious-views">Common Religious Views/Practices (Interview Q4) <span class="required">*</span></label>
+                    <textarea id="common-religious-views" rows="3" required placeholder="Paragraph/List: Dominant religions, key practices, or spiritual beliefs in the culture"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cultural-misunderstandings">Common Cultural Misunderstandings (Interview Q5) <span class="required">*</span></label>
+                    <textarea id="cultural-misunderstandings" rows="3" required placeholder="Paragraph: Most common misconceptions outsiders have about the culture/country"></textarea>
+                </div>
+            </div>
+
+            <!-- C. Daily Life & Society （访谈问题C5-C9 + PDF交通/传统服饰） -->
+            <div class="form-section">
+                <h2>C. Daily Life & Society</h2>
+                <div class="form-group">
+                    <label for="normal-daily-life">A Normal Day in the Culture (Interview Q5) <span class="required">*</span></label>
+                    <textarea id="normal-daily-life" rows="4" required placeholder="Paragraph: Typical daily routine, work/school/life balance, daily customs"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="family-gatherings-meals">Family Gatherings & Meal Expectations (Interview Q6) <span class="required">*</span></label>
+                    <textarea id="family-gatherings-meals" rows="3" required placeholder="Paragraph: Norms for family meals, gatherings, table manners, holiday meals"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="transportation-norms">Transportation Norms (Interview Q7 + PDF) <span class="required">*</span></label>
+                    <textarea id="transportation-norms" rows="3" required placeholder="Paragraph: Public transit, driving rules, walking culture, common transport for daily life"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="geo-climate-daily-life">Geo/Climate Impact on Daily Life + Dress Code (Interview Q8) <span class="required">*</span></label>
+                    <textarea id="geo-climate-daily-life" rows="3" required placeholder="Paragraph: How geography/climate shapes daily life, appropriate clothing for the weather/seasons"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="traditional-clothing">Traditional Clothing & Modern Wear (Interview Q9) <span class="required">*</span></label>
+                    <textarea id="traditional-clothing" rows="3" required placeholder="Paragraph: What traditional clothing looks like, when it’s worn today (holidays, events, etc.)"></textarea>
+                </div>
+            </div>
+
+            <!-- D. Greetings, Manners & Social Etiquette （访谈问题D10-D13 + PDF礼仪/Do&Don’t） -->
+            <div class="form-section">
+                <h2>D. Greetings, Manners & Social Etiquette</h2>
+                <div class="form-group">
+                    <label for="standard-greetings">Standard Greetings (Strangers vs. Close Friends) (Interview Q10) <span class="required">*</span></label>
+                    <textarea id="standard-greetings" rows="3" required placeholder="Paragraph: Greeting norms - formal (strangers) vs. informal (friends), physical contact (hug, bow, handshake)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="public-good-manners">Good Manners in Public/When Meeting New People (Interview Q11) <span class="required">*</span></label>
+                    <textarea id="public-good-manners" rows="3" required placeholder="Paragraph: Key manners for public spaces, meeting new people, address norms (titles, first names)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cultural-dos-donts">Cultural Do’s and Don’ts (Interview Q12) <span class="required">*</span></label>
+                    <textarea id="cultural-dos-donts" rows="3" required placeholder="List (label Do/Don’t) - e.g. Do: Remove shoes in homes&#10;Don’t: Point with your finger"></textarea>
+                    <p class="input-note">List format: Enter one rule per line, label with Do/Don’t</p>
+                </div>
+                <div class="form-group">
+                    <label for="conversation-taboos">Taboo Topics/Behaviors in Conversation (Interview Q13) <span class="required">*</span></label>
+                    <textarea id="conversation-taboos" rows="2" required placeholder="List (line break for each) - e.g. Politics&#10;Income&#10;Personal appearance criticism"></textarea>
+                    <p class="input-note">List format: Enter one taboo per line</p>
+                </div>
+            </div>
+
+            <!-- E. Food & Traditions （访谈问题E14-E15 + PDF美食/传统） -->
+            <div class="form-section">
+                <h2>E. Food & Traditions</h2>
+                <div class="form-group">
+                    <label for="common-dishes">Common Cultural Dishes (Interview Q14) <span class="required">*</span></label>
+                    <textarea id="common-dishes" rows="2" required placeholder="List (line break for each) - e.g. Sushi&#10;Ramen&#10;Tempura"></textarea>
+                    <p class="input-note">List format: Enter one dish per line</p>
+                </div>
+                <div class="form-group">
+                    <label for="unique-traditions">Unique Cultural Traditions (Interview Q15) <span class="required">*</span></label>
+                    <textarea id="unique-traditions" rows="4" required placeholder="Paragraph: Surprising traditions for outsiders - holidays, rituals, festivals, cultural practices"></textarea>
+                </div>
+            </div>
+
+            <!-- F. Practical Travel Considerations （访谈问题F16-F17 + PDF安全/法律） -->
+            <div class="form-section">
+                <h2>F. Practical Travel Considerations</h2>
+                <div class="form-group">
+                    <label for="unique-local-laws">Unique Local Laws for Visitors (Interview Q16) <span class="required">*</span></label>
+                    <textarea id="unique-local-laws" rows="2" required placeholder="List (line break for each) - e.g. No drinking alcohol in public&#10;Jaywalking carries heavy fines"></textarea>
+                    <p class="input-note">List format: Enter one law per line</p>
+                </div>
+                <div class="form-group">
+                    <label for="safety-concerns-foreigners">Safety Concerns/Dangers for Foreigners (Interview Q17) <span class="required">*</span></label>
+                    <textarea id="safety-concerns-foreigners" rows="3" required placeholder="Paragraph/List: Key safety tips, potential dangers, areas to avoid for foreign visitors"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="emergency-services">Emergency Services (Phone Numbers)</label>
+                    <textarea id="emergency-services" rows="2" placeholder="List (line break for each) - e.g. Police: 112&#10;Ambulance: 118&#10;Fire: 119"></textarea>
+                    <p class="input-note">List format: Service + Phone number per line</p>
+                </div>
+            </div>
+
+            <!-- G. Language & Slang （访谈问题G18-G19 + PDF短语/俚语） -->
+            <div class="form-section">
+                <h2>G. Language & Slang</h2>
+                <div class="form-group">
+                    <label for="common-slang">Common Slang/Informal Expressions (Interview Q18) <span class="required">*</span></label>
+                    <textarea id="common-slang" rows="3" required placeholder="List (Phrase - Meaning) - e.g. Bloke - A man&#10;Cheers - Thank you/Goodbye"></textarea>
+                    <p class="input-note">List format: Phrase - Meaning per line (use hyphen for translation)</p>
+                </div>
+                <div class="form-group">
+                    <label for="visitor-common-phrases">Useful Phrases for Visitors (Interview Q19) <span class="required">*</span></label>
+                    <textarea id="visitor-common-phrases" rows="3" required placeholder="List (Local Phrase - English Translation) - e.g. Konnichiwa - Hello&#10;Arigatou - Thank you"></textarea>
+                    <p class="input-note">List format: Local phrase - English translation per line</p>
+                </div>
+            </div>
+
+            <!-- H. Cultural Adjustment Experience (BYUI/Mission) （访谈问题H20-H23） -->
+            <div class="form-section">
+                <h2>H. Cultural Adjustment Experience (BYUI / Mission Context)</h2>
+                <div class="form-group">
+                    <label for="cultural-differences-noticed">Cultural Differences Noticed (Interview Q20) <span class="required">*</span></label>
+                    <textarea id="cultural-differences-noticed" rows="3" required placeholder="Paragraph: Key cultural differences between home culture and BYUI/mission area"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="most-shocking-cultural">Most Shocking Cultural Aspect (Interview Q21) <span class="required">*</span></label>
+                    <textarea id="most-shocking-cultural" rows="2" required placeholder="Paragraph: The most surprising/shocking cultural difference experienced"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="hardest-cultural-adjustment">Hardest Cultural Adjustment (Interview Q22) <span class="required">*</span></label>
+                    <textarea id="hardest-cultural-adjustment" rows="2" required placeholder="Paragraph: The most difficult part of adjusting to BYUI/mission area culture"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="normal-home-culture-here">Normal Home Culture Things (Not Done Here) (Interview Q23) <span class="required">*</span></label>
+                    <textarea id="normal-home-culture-here" rows="2" required placeholder="List (line break for each) - e.g. Taking off shoes in homes&#10;Eating with chopsticks at every meal"></textarea>
+                    <p class="input-note">List format: Enter one custom per line</p>
+                </div>
+            </div>
+
+            <!-- I. Reflection & Advice （访谈问题I24-I26） -->
+            <div class="form-section">
+                <h2>I. Reflection & Advice</h2>
+                <div class="form-group">
+                    <label for="first-time-culture-advice">Advice for First-Time Culture Visitors (Interview Q24) <span class="required">*</span></label>
+                    <textarea id="first-time-culture-advice" rows="3" required placeholder="Paragraph: Key advice for someone experiencing the culture for the first time"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="new-culture-prep-info">Info to Know Before Visiting a New Culture (Interview Q25) <span class="required">*</span></label>
+                    <textarea id="new-culture-prep-info" rows="3" required placeholder="Paragraph: What you would want to know before visiting a completely new culture"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="untalked-culture-fact">Key Untalked Fact for Visitors (Interview Q26) <span class="required">*</span></label>
+                    <textarea id="untalked-culture-fact" rows="2" required placeholder="Paragraph: One important fact about the country/culture not covered in the above questions"></textarea>
+                </div>
+            </div>
+
+            <!-- J. Follow-Up （访谈问题J27-J28 + PDF联系信息） -->
+            <div class="form-section">
+                <h2>J. Follow-Up & Contact Information</h2>
+                <p class="input-note">This contact information will NOT be posted on the public website</p>
+                <div class="form-group">
+                    <label for="willing-to-be-contacted">Willing to be Contacted by Website Users? (Interview Q27) <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="contact-willing" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="contact-willing" value="No" required> No</label>
+                    </div>
+                </div>
+                <div class="form-group" id="contact-info-group" style="display: none;">
+                    <label for="contact-information">Contact Information (Interview Q27) </label>
+                    <textarea id="contact-information" rows="2" placeholder="Enter email, phone, or other contact details (for website user inquiries)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="other-willing-people">Know Anyone Else Willing to Answer These Questions? (Interview Q28) <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="other-people" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="other-people" value="No" required> No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 表单操作按钮：复用原有CMS样式 -->
+            <div class="form-actions">
+                <button type="submit">Save All Country & Culture Info</button>
+                <button type="reset">Reset All Fields</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- 复用原有CMS底部 -->
+    <footer class="footer">
+        <p>Content Management System | Replace styles after design finalization</p>
+    </footer>
+
+    <!-- 引入原有JS，后续替换旧版国家信息保存逻辑 -->
+    <script src="script.js"></script>
+    <script>
+        // 动态显示/隐藏联系信息输入框（仅当选择Yes时显示）
+        const contactWillingRadios = document.querySelectorAll('input[name="contact-willing"]');
+        const contactInfoGroup = document.getElementById('contact-info-group');
+        contactWillingRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                contactInfoGroup.style.display = this.value === 'Yes' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
