@@ -1,38 +1,31 @@
 import {useForm} from '@tanstack/react-form';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {api} from '../api/mockApi';
+import {api} from '../api/mockApi.ts';
 
-const COUNTRY_FACT_FIELDS = [
-    'language', 'population', 'governmentType', 'currency', 'location',
-    'climate', 'typicalFood', 'greetings' // Acortado por brevedad, añade los que falten
-];
-
-const inputClass = "mt-1 block w-full rounded-md border-slate-300 shadow-sm border p-2.5 outline-none";
+const FACT_FIELDS = ['language', 'population', 'government', 'currency', 'climate', 'food', 'traditions'];
 
 export default function CountryForm() {
     const queryClient = useQueryClient();
-
     const mutation = useMutation({
         mutationFn: api.addCountry,
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['countries']});
-            alert('Country inserted into DB!');
+            alert('Country added!');
         }
     });
 
     const form = useForm({
         defaultValues: {
-            country_code: '',
-            country_name: '',
-            ...COUNTRY_FACT_FIELDS.reduce((acc, field) => ({...acc, [field]: ''}), {})
-        } as Record<string, string>,
-
+            country_code: '', country_name: '', ...FACT_FIELDS.reduce((a, v) => ({
+                ...a,
+                [v]: ''
+            }), {})
+        } as any,
         onSubmit: async ({value, formApi}) => {
-            // Separar columnas reales de la BD del JSON de "facts"
             const {country_code, country_name, ...details} = value;
             mutation.mutate({country_code, country_name, details});
             formApi.reset();
-        },
+        }
     });
 
     return (
@@ -40,56 +33,33 @@ export default function CountryForm() {
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();
-        }}>
-            <h3 className="text-lg font-semibold mb-6 border-b pb-2">Database Table: country</h3>
-
-            <div
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-4 bg-indigo-50 rounded border border-indigo-100">
-                <form.Field name="country_code">
-                    {(field) => (
-                        <div>
-                            <label className="block text-sm font-bold text-indigo-900">Country Code (CHAR 3)</label>
-                            <input value={field.state.value}
-                                   onChange={(e) => field.handleChange(e.target.value.substring(0, 3).toUpperCase())}
-                                   className={inputClass} placeholder="MEX" maxLength={3}/>
-                        </div>
-                    )}
-                </form.Field>
-
-                <form.Field name="country_name">
-                    {(field) => (
-                        <div>
-                            <label className="block text-sm font-bold text-indigo-900">Country Name (VARCHAR)</label>
-                            <input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)}
-                                   className={inputClass} placeholder="Mexico"/>
-                        </div>
-                    )}
-                </form.Field>
+        }} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 bg-indigo-50 p-4 rounded border border-indigo-200">
+                <form.Field name="country_code">{(f) => (
+                    <div><label className="text-xs font-bold uppercase text-indigo-800">Code (3 chars)</label>
+                        <input className="w-full border p-2 rounded" maxLength={3} value={f.state.value}
+                               onChange={e => f.handleChange(e.target.value.toUpperCase())}/></div>
+                )}</form.Field>
+                <form.Field name="country_name">{(f) => (
+                    <div><label className="text-xs font-bold uppercase text-indigo-800">Name</label>
+                        <input className="w-full border p-2 rounded" value={f.state.value}
+                               onChange={e => f.handleChange(e.target.value)}/></div>
+                )}</form.Field>
             </div>
 
-            <h4 className="text-sm font-bold text-slate-500 mb-4 uppercase tracking-wider">Facts (Saved as JSON
-                Text)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {COUNTRY_FACT_FIELDS.map((fieldName) => (
-                    <form.Field key={fieldName} name={fieldName}>
-                        {(field) => (
-                            <div>
-                                <label
-                                    className="block text-sm font-medium text-slate-700 capitalize">{fieldName.replace(/([A-Z])/g, ' $1').trim()}</label>
-                                <input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)}
-                                       className={inputClass}/>
-                            </div>
-                        )}
-                    </form.Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {FACT_FIELDS.map(field => (
+                    <form.Field key={field} name={field}>{(f) => (
+                        <div><label className="text-xs font-bold capitalize text-slate-600">{field}</label>
+                            <input className="w-full border p-2 rounded" value={f.state.value}
+                                   onChange={e => f.handleChange(e.target.value)}/></div>
+                    )}</form.Field>
                 ))}
             </div>
 
-            <div className="mt-8 flex justify-end">
-                <button type="submit" disabled={mutation.isPending}
-                        className="bg-indigo-600 py-2 px-6 text-sm text-white rounded hover:bg-indigo-500">
-                    Save Country
-                </button>
-            </div>
+            <button type="submit" className="w-full bg-slate-800 text-white p-2 rounded font-bold hover:bg-slate-900">
+                {mutation.isPending ? 'Saving...' : 'Register Country'}
+            </button>
         </form>
     );
 }
