@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001';
+const API_URL = 'https://backend-two-psi-89.vercel.app';
 
 export interface CountryDB {
     country_code: string;
