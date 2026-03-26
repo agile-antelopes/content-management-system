@@ -1,119 +1,94 @@
-export interface Country {
-    id: string;
-    name: string;
-    language: string;
-    population: string;
-    governmentType: string;
-    currency: string;
-    location: string;
-    geographicCharacteristics: string;
-    climate: string;
-    transport: string;
-    briefHistory: string;
-    mainCities: string;
-    religion: string;
-    values: string;
-    traditionsAndCustoms: string;
-    typicalFood: string;
-    greetings: string;
-    commonPhrasesOrSlang: string;
+// 1. Interfaces exactas de la Base de Datos
+export interface CountryDB {
+    country_code: string; // char(3) PK
+    country_name: string;
+    facts: string; // text (Aquí guardaremos el JSON con clima, comida, etc.)
 }
 
-export interface Question {
-    id: string;
-    topic: string;
-    text: string;
+export interface TopicTagDB {
+    topic_tag_id: number; // integer PK
+    topic_tag: string; // varchar
 }
 
-export interface TestimonialResponse {
-    questionId: string;
+// 2. Interfaces para el Frontend (Plantillas de Preguntas)
+export interface QuestionTemplate {
+    id: string; // Solo para uso interno del frontend
+    topic_tag_id: number;
+    question_text: string;
+}
+
+// 3. Payload para el envío del Testimonio (Interview + Responses)
+export interface ResponsePayload {
+    topic_tag_id: number;
+    question: string;
     answer: string;
 }
 
-export interface TestimonialData {
-    fullName: string;
-    age: string;
-    email: string;
-    countryOfBirth: string;
-    travelCountry: string;
-    responses: TestimonialResponse[];
+export interface InterviewPayload {
+    interviewer_name: string;
+    interviewee_name: string;
+    country_id: string; // FK a country_code
+    responses: ResponsePayload[];
 }
 
-// Initial Mock Data
-const countries: Country[] = [
-    {
-        id: '1',
-        name: 'Mexico',
-        language: 'Spanish',
-        population: '128M',
-        governmentType: 'Republic',
-        currency: 'Peso',
-        location: 'North America',
-        geographicCharacteristics: '',
-        climate: '',
-        transport: '',
-        briefHistory: '',
-        mainCities: '',
-        religion: '',
-        values: '',
-        traditionsAndCustoms: '',
-        typicalFood: 'Tacos',
-        greetings: '',
-        commonPhrasesOrSlang: ''
-    },
-    {
-        id: '2',
-        name: 'Japan',
-        language: 'Japanese',
-        population: '125M',
-        governmentType: 'Constitutional Monarchy',
-        currency: 'Yen',
-        location: 'Asia',
-        geographicCharacteristics: '',
-        climate: '',
-        transport: '',
-        briefHistory: '',
-        mainCities: '',
-        religion: '',
-        values: '',
-        traditionsAndCustoms: '',
-        typicalFood: 'Sushi',
-        greetings: '',
-        commonPhrasesOrSlang: ''
-    }
+// ---- DATOS INICIALES SIMULADOS ----
+let countries: CountryDB[] = [
+    { country_code: 'MEX', country_name: 'Mexico', facts: '{"typicalFood":"Tacos","language":"Spanish"}' },
+    { country_code: 'JPN', country_name: 'Japan', facts: '{"typicalFood":"Sushi","language":"Japanese"}' }
 ];
 
-const questions: Question[] = [
-    {id: '1', topic: 'Culture', text: 'What surprised you the most?'},
-    {id: '2', topic: 'Food', text: 'What was your favorite dish?'}
+let topics: TopicTagDB[] = [
+    { topic_tag_id: 1, topic_tag: 'Culture' },
+    { topic_tag_id: 2, topic_tag: 'Food' }
+];
+
+let questionTemplates: QuestionTemplate[] = [
+    { id: 'q1', topic_tag_id: 1, question_text: 'What surprised you the most about the culture?' },
+    { id: 'q2', topic_tag_id: 2, question_text: 'What was your favorite local dish?' }
 ];
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const api = {
-    getCountries: async (): Promise<Country[]> => {
+    getCountries: async (): Promise<CountryDB[]> => {
         await delay(300);
         return [...countries];
     },
-    addCountry: async (countryData: Omit<Country, 'id'>): Promise<Country> => {
+
+    // Recibe los datos del formulario, los convierte a JSON y los guarda
+    addCountry: async (data: { country_code: string, country_name: string, details: Record<string, string> }): Promise<CountryDB> => {
         await delay(300);
-        const newCountry = {id: String(Date.now()), ...countryData};
+        const newCountry: CountryDB = {
+            country_code: data.country_code.toUpperCase(),
+            country_name: data.country_name,
+            facts: JSON.stringify(data.details) // Empaquetamos en la columna 'facts'
+        };
         countries.push(newCountry);
         return newCountry;
     },
-    getQuestions: async (): Promise<Question[]> => {
-        await delay(300);
-        return [...questions];
+
+    getTopics: async (): Promise<TopicTagDB[]> => {
+        await delay(200);
+        return [...topics];
     },
-    addQuestion: async (questionData: Omit<Question, 'id'>): Promise<Question> => {
+
+    getQuestions: async (): Promise<QuestionTemplate[]> => {
         await delay(300);
-        const newQuestion = {id: String(Date.now()), ...questionData};
-        questions.push(newQuestion);
-        return newQuestion;
+        return [...questionTemplates];
     },
-    submitTestimonial: async (data: TestimonialData): Promise<{ success: boolean }> => {
+
+    addQuestion: async (data: Omit<QuestionTemplate, 'id'>): Promise<QuestionTemplate> => {
+        await delay(300);
+        const newQ = { id: String(Date.now()), ...data };
+        questionTemplates.push(newQ);
+        return newQ;
+    },
+
+    submitInterview: async (data: InterviewPayload): Promise<{ success: boolean }> => {
         await delay(500);
-        console.log("Testimonial saved:", data);
-        return {success: true};
+        // Aquí tu backend real insertaría en 'interview-A' y luego iteraría sobre 'responses'
+        // para insertar en 'response-A' usando el interview_id generado.
+        console.log("PAYLOAD LISTO PARA LA BD:", JSON.stringify(data, null, 2));
+        return { success: true };
     }
 };
